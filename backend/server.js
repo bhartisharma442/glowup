@@ -58,7 +58,14 @@ app.post('/register', async (req, res) => {
     }
   });
   
-
+  app.get('/api/products', async (req, res) => {
+    try {
+      const products = await Product.find(); // assuming Product is your mongoose model
+      res.json(products);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch products' });
+    }
+  });  
 
 
   app.post('/login', async (req, res) => {
