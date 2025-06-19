@@ -1,71 +1,151 @@
 // src/components/Navbar.js
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-
-// function Navbar() {
-//   return (
-//     <nav style={{ padding: '10px', background: '#eee' }}>
-//       <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
-//       <Link to="/login">Login</Link>
-//     </nav>
-//   );
-// }
-
-// export default Navbar;
-
-
-
-
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css'; // Create this for styling
+import './Navbar.css';
+import authUtils from '../utils/auth';
 
 const Navbar = () => {
-    const [userLoggedIn, setUserLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const checkUser = () => {
-          const storedUser = localStorage.getItem('user');
-          setUserLoggedIn(!!storedUser);
+        // Check if user is logged in on component mount
+        const currentUser = authUtils.getCurrentUser();
+        setUser(currentUser);
+
+        // Listen for storage changes (login/logout events)
+        const handleStorageChange = () => {
+            const updatedUser = authUtils.getCurrentUser();
+            setUser(updatedUser);
         };
-      
-        checkUser();
-        window.addEventListener('storage', checkUser);
-        return () => window.removeEventListener('storage', checkUser);
-      }, []);
-      
+
+        window.addEventListener('storage', handleStorageChange);
+        
+        // Verify token on mount
+        authUtils.verifyToken().then((isValid) => {
+            if (!isValid && currentUser) {
+                setUser(null);
+            }
+        });
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []); // Remove user dependency to prevent infinite loop
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        setUserLoggedIn(false);
+        authUtils.logout();
+        setUser(null);
+        setShowDropdown(false);
         navigate('/login');
     };
-    
-  return (
-    <header className="navbar">
-      <div className="brand">Glow Up - Beauty Cosmetics</div>
-      <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/">Products</Link></li>
-          <li><Link to="/">About</Link></li>
-          <li><Link to="/">Shop List</Link></li>
-          
-          {userLoggedIn ? (
-                <button onClick={handleLogout} className="logout-button">Logout</button>
-            ) : (
-                <>
-                <li><Link to="/login">Login/Register</Link></li>
-                </>
-            )}
-            
-          <li><Link to="/cart"><span role="img" aria-label="cart">🛒</span></Link></li>
-        </ul>
-      </nav>
-    </header>
-  );
+
+    const toggleDropdown = () => {
+        setShowDropdown(!showDropdown);
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showDropdown && !event.target.closest('.user-menu')) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, [showDropdown]);
+
+    return (
+        <header className="navbar">
+            <div className="brand">Glow Up - Beauty Cosmetics</div>
+            <nav>
+                <ul>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/products">Products</Link></li>
+                    <li><Link to="/about">About</Link></li>
+                    <li><Link to="/shop-list">Shop List</Link></li>
+                    <li><Link to="/cart"><span role="img" aria-label="cart">🛒</span></Link></li>
+                    
+                    {user ? (
+                        <li className="user-menu">
+                            <div className="user-dropdown">
+                                <button 
+                                    className={`user-button${showDropdown ? ' open' : ''}`}
+                                    onClick={toggleDropdown}
+                                >
+                                    <span className="user-name">{user.name}</span>
+                                    {user.role === 'admin' && (
+                                        <span className="admin-badge">Admin</span>
+                                    )}
+                                    <span className="dropdown-arrow">▼</span>
+                                </button>
+                                
+                                {showDropdown && (
+                                    <div className="dropdown-menu">
+                                        <Link 
+                                            to="/profile" 
+                                            className="dropdown-item"
+                                            onClick={() => setShowDropdown(false)}
+                                        >
+                                            Profile
+                                        </Link>
+                                        <Link 
+                                            to="/orders" 
+                                            className="dropdown-item"
+                                            onClick={() => setShowDropdown(false)}
+                                        >
+                                            My Orders
+                                        </Link>
+                                        
+                                        {user.role === 'admin' && (
+                                            <>
+                                                <hr className="dropdown-divider" />
+                                                <Link 
+                                                    to="/admin/dashboard" 
+                                                    className="dropdown-item admin-item"
+                                                    onClick={() => setShowDropdown(false)}
+                                                >
+                                                    Admin Dashboard
+                                                </Link>
+                                                <Link 
+                                                    to="/admin/products" 
+                                                    className="dropdown-item admin-item"
+                                                    onClick={() => setShowDropdown(false)}
+                                                >
+                                                    Manage Products
+                                                </Link>
+                                                <Link 
+                                                    to="/admin/users" 
+                                                    className="dropdown-item admin-item"
+                                                    onClick={() => setShowDropdown(false)}
+                                                >
+                                                    Manage Users
+                                                </Link>
+                                            </>
+                                        )}
+                                        
+                                        <hr className="dropdown-divider" />
+                                        <button 
+                                            className="dropdown-item logout-item"
+                                            onClick={handleLogout}
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </li>
+                    ) : (
+                        <li class="bold"><Link to="/login">Login/Register</Link></li>
+                    )}
+                    
+                    
+                </ul>
+            </nav>
+        </header>
+    );
 };
 
 export default Navbar;
-
