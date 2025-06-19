@@ -6,6 +6,7 @@
     background: #f5f5f5;
     border-radius: 8px;
     text-align: center;
+    /* background: linear-gradient(to bottom, #dce3ff, #f7e8ff); */
   }
   
   .login-container {
