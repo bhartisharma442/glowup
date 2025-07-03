@@ -12,7 +12,7 @@ const authMiddleware = require('./middleware/auth');
 
 // Import admin routes
 const adminRoutes = require('./routes/adminRoutes');
-
+const cartRoutes = require('./routes/cartRoutes');
 dotenv.config();
 
 const app = express();
@@ -25,6 +25,7 @@ app.use(bodyParser.json());
 
 // Mount admin routes
 app.use('/api/admin', adminRoutes);
+app.use('/cart', cartRoutes);
 
 // Sample route
 app.get('/', (req, res) => {
@@ -80,7 +81,7 @@ app.post('/login', async (req, res) => {
 
         // Generate JWT token
         const token = jwt.sign(
-            { userId: user.userId, email: user.email, role: user.role },
+            { _id: user._id, userId: user.userId, email: user.email, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
@@ -89,6 +90,7 @@ app.post('/login', async (req, res) => {
             message: 'Login successful', 
             token,
             user: { 
+                _id: user._id,
                 userId: user.userId, 
                 name: user.name, 
                 email: user.email,
