@@ -13,6 +13,8 @@ const authMiddleware = require('./middleware/auth');
 // Import admin routes
 const adminRoutes = require('./routes/adminRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const userRoutes = require('./routes/userRoutes');
+
 dotenv.config();
 
 const app = express();
@@ -26,6 +28,8 @@ app.use(bodyParser.json());
 // Mount admin routes
 app.use('/api/admin', adminRoutes);
 app.use('/cart', cartRoutes);
+app.use('/api', userRoutes);
+
 
 // Sample route
 app.get('/', (req, res) => {
@@ -81,7 +85,7 @@ app.post('/login', async (req, res) => {
 
         // Generate JWT token
         const token = jwt.sign(
-            { _id: user._id, userId: user.userId, email: user.email, role: user.role },
+            { _id: user._id, userId: user.userId, name:user.name, email: user.email, role: user.role, number: user.number },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
@@ -94,7 +98,7 @@ app.post('/login', async (req, res) => {
                 userId: user.userId, 
                 name: user.name, 
                 email: user.email,
-                role: user.role 
+                role: user.role
             } 
         });
   
@@ -132,9 +136,11 @@ app.get('/api/verify-token', authMiddleware, (req, res) => {
     res.json({ 
         message: 'Token is valid', 
         user: {
+            name: req.user.name,
             userId: req.user.userId,
             email: req.user.email,
-            role: req.user.role
+            role: req.user.role,
+            number: req.user.number
         }
     });
 });
