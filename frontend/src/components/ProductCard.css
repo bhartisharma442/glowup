@@ -85,7 +85,7 @@
     min-height: 40px;
   }
   
-  .product-details {
+  .product-details-card {
     display: flex;
     flex-direction: column;
     gap: 15px;

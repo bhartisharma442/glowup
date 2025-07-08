@@ -62,11 +62,11 @@ const Navbar = () => {
             <div className="brand">Glow Up - Beauty Cosmetics</div>
             <nav>
                 <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/products">Products</Link></li>
-                    <li><Link to="/about">About</Link></li>
-                    <li><Link to="/shop-list">Shop List</Link></li>
-                    <li><Link to="/cart"><span role="img" aria-label="cart">🛒</span></Link></li>
+                    <li><Link to="/"><span role="img" aria-label="home">🏠</span> Home</Link></li>
+                    <li><Link to="/products"><span role="img" aria-label="products">🛍️</span> Products</Link></li>
+                    <li><Link to="/about"><span role="img" aria-label="about">ℹ️</span> About</Link></li>
+                    <li><Link to="/cart"><span role="img" aria-label="cart">🛒</span> Cart</Link></li>
+
                     
                     {user ? (
                         <li className="user-menu">

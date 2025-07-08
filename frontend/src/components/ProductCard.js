@@ -48,15 +48,17 @@ const ProductCard = ({ product, onAddToCart }) => {
             : product.description || 'No description available'}
         </p>
         
-        <div className="product-details">
+        <div className="product-details-card">
           <div className="price-stock">
             <span className="product-price">{formatPrice(product.price)}</span>
             <span className="stock-info">
-              {product.stock_quantity > 0 
-                ? `${product.stock_quantity} in stock`
-                : 'Out of stock'
-              }
+              {product.stock_quantity === 0
+                ? 'Out of stock'
+                : product.stock_quantity < 10
+                  ? `Only ${product.stock_quantity} left!`
+                  : ''}
             </span>
+
           </div>
           
           <button

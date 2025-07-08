@@ -141,7 +141,7 @@
 .user-name {
   font-weight: bold;
   font-size: medium;
-  color: #333;
+  color: #c186e5;
 }
 
 .admin-badge {
@@ -156,7 +156,7 @@
 
 .dropdown-arrow {
   font-size: 10px;
-  color: #666;
+  color: #999;
   transition: transform 0.3s ease;
 }
 
