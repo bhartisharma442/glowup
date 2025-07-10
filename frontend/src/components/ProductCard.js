@@ -63,10 +63,10 @@ const ProductCard = ({ product, onAddToCart }) => {
           
           <button
             className={`add-to-cart-btn ${isOutOfStock ? 'disabled' : ''}`}
-            onClick={handleAddToCart}
+            onClick={handleCardClick}
             disabled={isOutOfStock}
           >
-            Add to Cart
+            View
             {/* {isOutOfStock ? 'Out of Stock' : 'Add to Cart'} */}
           </button>
         </div>
