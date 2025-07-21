@@ -533,4 +533,47 @@ router.delete('/products/bulk-delete', async (req, res) => {
     }
 });
 
+
+// Get all orders (admin)
+router.get('/orders', async (req, res) => {
+    try {
+        const orders = await Order.find()
+            .populate('user_id', 'name email') // optional
+            .sort({ order_date: -1 });
+        res.json(orders);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Update order status
+router.put('/orders/:id', async (req, res) => {
+    try {
+        const { status } = req.body;
+        const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
+        }
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.json({ message: 'Order status updated', order: updatedOrder });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
+
 module.exports = router;
