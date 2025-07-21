@@ -123,6 +123,13 @@ const Navbar = () => {
                                                 >
                                                     Manage Users
                                                 </Link>
+                                                <Link 
+                                                    to="/admin/orders" 
+                                                    className="dropdown-item admin-item"
+                                                    onClick={() => setShowDropdown(false)}
+                                                >
+                                                    Manage Orders
+                                                </Link>
                                             </>
                                         )}
                                         

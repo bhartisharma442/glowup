@@ -12,6 +12,7 @@ import ManageProducts from './pages/ManageProducts';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import ManageUsers from './pages/ManageUsers';
+import ManageOrdersPage from './pages/ManageOrders';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
@@ -31,6 +32,7 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/products" element={<ManageProducts />} />
           <Route path="/admin/users" element={<ManageUsers />} />
+          <Route path="/admin/orders" element={<ManageOrdersPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
