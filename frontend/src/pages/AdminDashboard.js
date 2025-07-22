@@ -289,9 +289,7 @@ const AdminDashboard = () => {
                         <Link to="/products" className="nav-link">
                             🛍️ View Products
                         </Link>
-                        <Link to="/admin/settings" className="nav-link">
-                            ⚙️ Settings
-                        </Link>
+                        
                     </div>
                 </div>
             </div>
