@@ -14,6 +14,7 @@ const authMiddleware = require('./middleware/auth');
 const adminRoutes = require('./routes/adminRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const userRoutes = require('./routes/userRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 dotenv.config();
 
@@ -29,7 +30,7 @@ app.use(bodyParser.json());
 app.use('/api/admin', adminRoutes);
 app.use('/cart', cartRoutes);
 app.use('/api', userRoutes);
-
+app.use('/api/reviews', reviewRoutes);
 
 // Sample route
 app.get('/', (req, res) => {
