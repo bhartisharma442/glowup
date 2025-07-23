@@ -33,7 +33,7 @@
 }
 
 .back-btn {
-    background: #986565;
+    background: #630cf1;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -44,7 +44,7 @@
 }
 
 .back-btn:hover {
-    background: #6b4747;
+    background: #8140e8;
     transform: translateY(-1px);
 }
 
@@ -277,7 +277,7 @@
   }
 
   
-.product-image {
+.product-image-manage {
     width: 50px;
     height: 50px;
     border-radius: 6px;
@@ -288,9 +288,9 @@
     background: #f8f9fa;
 }
 
-.product-image img {
-    width: 4rem;
-    height: 4rem;
+.product-image-manage img {
+    width: 90%;
+    /* height: 4rem; */
     object-fit: cover;
 }
 

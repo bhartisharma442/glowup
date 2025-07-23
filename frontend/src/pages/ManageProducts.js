@@ -380,7 +380,7 @@ const ManageProducts = () => {
                                 {currentProducts.map(product => (
                                     <tr key={product._id}>
                                         <td>
-                                            <div className="product-image">
+                                            <div className="product-image-manage">
                                                 {product.image ? (
                                                     <img src={product.image} alt={product.name} />
                                                 ) : (

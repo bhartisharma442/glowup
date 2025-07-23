@@ -23,7 +23,7 @@
 }
 
 .back-btn {
-    background: #dc3545;
+    background: #630cf1;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -34,7 +34,7 @@
 }
 
 .back-btn:hover {
-    background: #7d1e28;
+    background: #8140e8;
 }
 
 .wheat-color {
@@ -148,7 +148,7 @@
 }
 
 .sort-order-btn {
-    background: #007bff;
+    background: #6610f2;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -160,7 +160,7 @@
 }
 
 .sort-order-btn:hover {
-    background: #0056b3;
+    background: #6610f2;
 }
 
 /* Table */
@@ -178,11 +178,11 @@
 }
 
 .users-table th {
-    background: #f8f9fa;
+    background: darkmagenta !important;
     padding: 12px;
     text-align: left;
     font-weight: 600;
-    color: #495057;
+    color: white;
     border-bottom: 2px solid #dee2e6;
 }
 
