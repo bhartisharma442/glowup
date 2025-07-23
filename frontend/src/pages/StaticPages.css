@@ -1,0 +1,41 @@
+.static-page {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #333;
+  line-height: 1.6;
+}
+
+.static-page h1 {
+  margin-bottom: 1rem;
+  font-size: 2.2rem;
+  color: darkmagenta;
+}
+
+.static-page h2 {
+  margin-top: 1.5rem;
+  font-size: 1.5rem;
+  color: #222;
+}
+
+.static-page p, .static-page ul {
+  font-size: 1rem;
+}
+
+.static-page ul {
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
+/* Contact-specific styles */
+.contact-page .contact-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.contact-icon {
+  width: 60px;
+  height: auto;
+}
