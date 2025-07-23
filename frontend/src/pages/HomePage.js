@@ -3,41 +3,56 @@ import React, { useEffect, useState } from 'react';
 import './HomePage.css';
 import heroImage from '../assets/logo.jpg';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
 
     // Check if user is logged in
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const userData = localStorage.getItem('user');
-        
-        if (token && userData) {
-            setUser(JSON.parse(userData));
-            // Set authorization header for authenticated requests
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        }
+        const verifyUser = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+            setUser(null);
+            return;
+            }
 
-        // Listen for storage changes (login/logout)
-        const handleStorageChange = () => {
-            const newToken = localStorage.getItem('token');
-            const newUserData = localStorage.getItem('user');
-            
-            if (newToken && newUserData) {
-                setUser(JSON.parse(newUserData));
-                axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-            } else {
-                setUser(null);
-                delete axios.defaults.headers.common['Authorization'];
+            try {
+            const res = await axios.get('http://localhost:5000/api/verify-token', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setUser(res.data.user);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            } catch (err) {
+            // Token expired or invalid
+            console.warn('Token invalid or expired. Logging out.');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(null);
+            delete axios.defaults.headers.common['Authorization'];
             }
         };
 
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
+        verifyUser();
+
+        // Optional: Also re-verify when returning to the tab
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+            verifyUser();
+            }
+        });
+
+        return () => {
+            document.removeEventListener('visibilitychange', verifyUser);
+        };
+        }, []);
+
+
 
     // Fetch products
     useEffect(() => {
@@ -46,7 +61,7 @@ const HomePage = () => {
                 setLoading(true);
                 const res = await axios.get('http://localhost:5000/api/products');
                 console.log('Fetched products:', res.data);
-                setProducts(res.data.slice(0, 6)); // Show first 6 products
+                setProducts(res.data.slice(0, 3)); // Show first  products
                 setError('');
             } catch (err) {
                 console.error('Failed to fetch products:', err);
@@ -58,6 +73,10 @@ const HomePage = () => {
 
         fetchProducts();
     }, []);
+
+    const handleViewProduct = (productId) => {
+      navigate(`/products/${productId}`);
+    };
 
     const handleAddToCart = async (productId) => {
         if (!user) {
@@ -153,20 +172,15 @@ const HomePage = () => {
                                     </p>
                                     <div className="product-meta">
                                         <span className="category">{product.category}</span>
-                                        <span className="stock">
-                                            {product.stock > 0 
-                                                ? `${product.stock} in stock` 
-                                                : 'Out of stock'
-                                            }
-                                        </span>
+                                        
                                     </div>
                                     <button 
-                                        className={`add-to-cart-btn ${product.stock === 0 ? 'disabled' : ''}`}
-                                        onClick={() => handleAddToCart(product._id || product.productId)}
-                                        disabled={product.stock === 0}
-                                    >
-                                        {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                        className="view-product-btn"
+                                        onClick={() => handleViewProduct(product._id || product.productId)}
+                                        >
+                                        View Product
                                     </button>
+
                                 </div>
                             </div>
                         ))}
@@ -174,23 +188,7 @@ const HomePage = () => {
                 )}
             </section>
 
-            {/* Admin Quick Actions */}
-            {user && user.role === 'admin' && (
-                <section className="admin-actions">
-                    <h3>Admin Quick Actions</h3>
-                    <div className="admin-buttons">
-                        <button onClick={() => window.open('/admin/products', '_blank')}>
-                            Manage Products
-                        </button>
-                        <button onClick={() => window.open('/admin/users', '_blank')}>
-                            Manage Users
-                        </button>
-                        <button onClick={() => window.open('/admin/dashboard', '_blank')}>
-                            Dashboard
-                        </button>
-                    </div>
-                </section>
-            )}
+            
         </main>
     );
 };
